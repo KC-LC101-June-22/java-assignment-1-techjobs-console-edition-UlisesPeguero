@@ -121,20 +121,20 @@ public class TechJobs {
 
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
-        System.out.println();
         if(someJobs == null || someJobs.size() == 0) {
             System.out.println("No Results");
             return;
         }
         for(HashMap<String, String> job: someJobs) System.out.println(printJob(job));
+        System.out.println();
     }
 
     private static String printJob(HashMap<String, String> job) {
-        String jobString = "*****\n";
+        String jobString = "\n*****\n";
         for(String field: fieldsList) {
             jobString += field + ": " + job.get(field) + "\n";
         }
-        return jobString + "*****\n";
+        return jobString + "*****";
     }
 
 }
