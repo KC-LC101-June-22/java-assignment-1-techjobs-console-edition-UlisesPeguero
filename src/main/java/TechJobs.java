@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * Created by LaunchCode
@@ -9,6 +10,7 @@ import java.util.Scanner;
 public class TechJobs {
 
     static Scanner in = new Scanner(System.in);
+    static String []fieldsList = {"position type", "name", "employer", "location", "core competency"};
 
     public static void main (String[] args) {
 
@@ -119,7 +121,20 @@ public class TechJobs {
 
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
-
-        System.out.println("printJobs is not implemented yet");
+        System.out.println();
+        if(someJobs == null || someJobs.size() == 0) {
+            System.out.println("No Results");
+            return;
+        }
+        for(HashMap<String, String> job: someJobs) System.out.println(printJob(job));
     }
+
+    private static String printJob(HashMap<String, String> job) {
+        String jobString = "*****\n";
+        for(String field: fieldsList) {
+            jobString += field + ": " + job.get(field) + "\n";
+        }
+        return jobString + "*****\n";
+    }
+
 }

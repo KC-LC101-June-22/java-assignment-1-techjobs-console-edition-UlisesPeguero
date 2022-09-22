@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Created by LaunchCode
@@ -77,14 +79,30 @@ public class JobData {
 
         for (HashMap<String, String> row : allJobs) {
 
-            String aValue = row.get(column);
+            String aValue = row.get(column).toLowerCase();
 
-            if (aValue.contains(value)) {
+            if (aValue.contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
 
         return jobs;
+    }
+
+    /**
+     * Predicate that determines if the value exist on any field, returns on first
+     * ocurrence
+     *
+     * @param value The search term to look for on all the fields of the job
+     * @return      Predicate
+     */
+    public static Predicate<HashMap<String, String>> jobHasValue(String value) {
+        return p -> {
+            for(String field: p.keySet()) {
+                if(p.get(field).toLowerCase().contains(value.toLowerCase())) return true;
+            }
+            return false;
+        };
     }
 
     /**
@@ -98,8 +116,10 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
-        // TODO - implement this method
-        return null;
+        return (ArrayList<HashMap<String, String>>) allJobs.stream()
+                .filter(jobHasValue(value))
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     /**
