@@ -90,6 +90,12 @@ public class JobData {
         return jobs;
     }
 
+    /**
+     * Search the given term in all the values of the object
+     *
+     * @param valueToSearch The search term to look for
+     * @return              Predicate that determines if the value exists in the object
+     */
     private static Predicate<HashMap<String, String>> searchValueInJob(String valueToSearch) {
         return job -> {
             for(String value: job.values()) {
