@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Created by LaunchCode
@@ -19,6 +21,7 @@ public class JobData {
     private static boolean isDataLoaded = false;
 
     private static ArrayList<HashMap<String, String>> allJobs;
+
 
     /**
      * Fetch list of all values from loaded data,
@@ -54,7 +57,7 @@ public class JobData {
         loadData();
 
         // Bonus mission; normal version returns allJobs
-        return new ArrayList<>(allJobs);
+        return (ArrayList<HashMap<String, String>>) allJobs.clone();
     }
 
     /**
@@ -77,14 +80,29 @@ public class JobData {
 
         for (HashMap<String, String> row : allJobs) {
 
-            String aValue = row.get(column);
+            String aValue = row.get(column).toLowerCase();
 
-            if (aValue.contains(value)) {
+            if (aValue.contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
 
         return jobs;
+    }
+
+    /**
+     * Search the given term in all the values of the object
+     *
+     * @param valueToSearch The search term to look for
+     * @return              Predicate that determines if the value exists in the object
+     */
+    private static Predicate<HashMap<String, String>> searchValueInJob(String valueToSearch) {
+        return job -> {
+            for(String value: job.values()) {
+                if(value.toLowerCase().contains(valueToSearch.toLowerCase())) return true;
+            }
+            return false;
+        };
     }
 
     /**
@@ -98,8 +116,10 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
-        // TODO - implement this method
-        return null;
+        return (ArrayList<HashMap<String, String>>) allJobs.stream()
+                .filter(searchValueInJob(value))
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     /**
